@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="adb11052-9c21-47a6-be29-d39427c2d3ee">
+	<property name="com.jaspersoft.studio.data.sql.tables">
+		<![CDATA[dGJfdGlwb19iaWVuICwxNSwxNSw5NzE5NjY4YS0yM2Q3LTRkOTUtOGJjNS03MmE3YzFiNjExYWE7
+dGJfYmllbiAsMTMyLDE1LDNlZTVjNGY1LTg4NDEtNDQ2Ni1hOTI1LTFjN2FkNzZiMTQ3ODs=]]>
+	</property>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
+	<queryString language="SQL">
+		<![CDATA[select tb.cod_tipo_bien,tb.des_tipo_bien,count(b.cod_bien) from  tb_tipo_bien tb left join 
+tb_bien b on b.cod_tipo_bien=tb.cod_tipo_bien group by tb.cod_tipo_bien,tb.des_tipo_bien]]>
+	</queryString>
+	<field name="cod_tipo_bien" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="cod_tipo_bien"/>
+		<property name="com.jaspersoft.studio.field.label" value="cod_tipo_bien"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="tb_tipo_bien"/>
+	</field>
+	<field name="des_tipo_bien" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="des_tipo_bien"/>
+		<property name="com.jaspersoft.studio.field.label" value="des_tipo_bien"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="tb_tipo_bien"/>
+	</field>
+	<field name="count(b.cod_bien)" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="count(b.cod_bien)"/>
+		<property name="com.jaspersoft.studio.field.label" value="count(b.cod_bien)"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="20" width="560" height="30" uuid="5502437f-0474-4ecf-854b-3fa989b9fd96"/>
+				<textElement textAlignment="Center">
+					<font size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE TIPO DE BIEN]]></text>
+			</staticText>
+		</band>
+	</title>
+	<summary>
+		<band height="270" splitType="Stretch">
+			<barChart>
+				<chart evaluationTime="Report">
+					<reportElement x="40" y="10" width="480" height="250" uuid="bbaf9045-b32a-4015-93b5-0b05935f0827"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["CANTIDAD"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{des_tipo_bien}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{count(b.cod_bien)}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true">
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+		</band>
+	</summary>
+</jasperReport>
