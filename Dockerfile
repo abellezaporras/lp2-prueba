@@ -1,28 +1,28 @@
 #
 # ---- Build stage ----
 #
-FROM maven:3.8.3-openjdk-17-alpine AS build
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copia el contenido del proyecto
+# Copiar el proyecto
 COPY . .
 
-# Compila el proyecto
+# Compilar sin ejecutar tests
 RUN mvn clean package -DskipTests
 
 #
 # ---- Runtime stage ----
 #
-FROM openjdk:17-alpine
+FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
-# Instala dependencias necesarias para JasperReports (fuentes y renderizado PDF)
+# Instalar librerías necesarias para JasperReports (fuentes PDF)
 RUN apk add --no-cache fontconfig freetype ttf-dejavu
 
-# Copia el JAR compilado desde la etapa anterior
+# Copiar el JAR compilado desde la etapa de build
 COPY --from=build /app/target/*.jar app.jar
 
-# Render asigna dinámicamente el puerto; no usar EXPOSE fijo
+# Configurar puerto dinámico para Render
 ENV PORT=8080
 ENV JAVA_OPTS=""
 
