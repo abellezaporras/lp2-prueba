@@ -1,36 +1,30 @@
 #
-# Build stage
+# ---- Build stage ----
 #
-FROM maven:3.8.3-openjdk-17 AS build
+FROM maven:3.8.3-openjdk-17-alpine AS build
 WORKDIR /app
 
-# Copiar archivos del proyecto
-COPY . /app/
+# Copia el contenido del proyecto
+COPY . .
 
-# Construir la app
+# Compila el proyecto
 RUN mvn clean package -DskipTests
 
-# Instalar librerías de fuentes necesarias para JasperReports
-RUN apt-get update && apt-get install -y fontconfig libfreetype6
-
 #
-# Runtime stage
+# ---- Runtime stage ----
 #
-FROM openjdk:17-slim
+FROM openjdk:17-alpine
 WORKDIR /app
 
-# Instalar fuentes y dependencias necesarias para PDF
-RUN apt-get update && apt-get install -y \
-    fontconfig \
-    libfreetype6 \
-    fonts-dejavu-core \
-    && rm -rf /var/lib/apt/lists/*
+# Instala dependencias necesarias para JasperReports (fuentes y renderizado PDF)
+RUN apk add --no-cache fontconfig freetype ttf-dejavu
 
-# Copiar el JAR desde el build
-COPY --from=build /app/target/*.jar /app/app.jar
+# Copia el JAR compilado desde la etapa anterior
+COPY --from=build /app/target/*.jar app.jar
 
-# Exponer el puerto del backend
-EXPOSE 8080
+# Render asigna dinámicamente el puerto; no usar EXPOSE fijo
+ENV PORT=8080
+ENV JAVA_OPTS=""
 
-# Ejecutar la app
-ENTRYPOINT ["java","-jar","app.jar"]
+# Comando de inicio
+CMD ["sh", "-c", "java $JAVA_OPTS -jar app.jar --server.port=$PORT"]
