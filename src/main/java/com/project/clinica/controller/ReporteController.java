@@ -37,6 +37,7 @@ public class ReporteController {
 	@RequestMapping("/medicamentos")
 	public void medicamentos(HttpServletResponse response) {
 		try {
+			System.setProperty("java.awt.headless", "true");
 			//obtener lista de medicamentos
 			List<Medicamento> lista=servicoMed.listar();
 			
