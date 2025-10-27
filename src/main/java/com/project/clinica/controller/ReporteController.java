@@ -49,7 +49,7 @@ public class ReporteController {
 	        JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, null, origen);
 
 			
-			System.out.println("Ruta reportes: " + getClass().getResource("reporte_medicamentos.jasper"));
+			//System.out.println("Ruta reportes: " + getClass().getResource("reporte_medicamentos.jasper"));
 			response.setContentType("application/pdf");
 			response.setHeader("Content-Disposition", "inline; filename=reporte.pdf");
 			OutputStream out = response.getOutputStream();
@@ -67,18 +67,20 @@ public class ReporteController {
 	@RequestMapping("/tipoBien")
 	public void tipoBien(HttpServletResponse response) {
 		try {
-			
-			File file=ResourceUtils.getFile("classpath:reporte1.jrxml");
-			//compilar archivo "pasar de jrxml a jasper"
-			JasperReport jasper=JasperCompileManager.compileReport(file.getAbsolutePath());
+			System.setProperty("java.awt.headless", "true");
+			InputStream reporte = new ClassPathResource("reporte1.jasper").getInputStream();
+	        JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, null, dataSource.getConnection());
 
-			//Llenar el reporte "archivo compilado" con los dayos
-			JasperPrint jasperPrint=JasperFillManager.fillReport(jasper, null,dataSource.getConnection());
-			//salida del reporte en PDF, respuesta HTTP
+			
+			//System.out.println("Ruta reportes: " + getClass().getResource("reporte_medicamentos.jasper"));
 			response.setContentType("application/pdf");
-			//Enviar PDF al navegador
-			OutputStream salida=response.getOutputStream();
-			JasperExportManager.exportReportToPdfStream(jasperPrint, salida);
+			response.setHeader("Content-Disposition", "inline; filename=reporte1.pdf");
+			OutputStream out = response.getOutputStream();
+			JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+			out.flush();
+			
+			
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
